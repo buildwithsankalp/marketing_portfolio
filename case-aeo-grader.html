@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="How Sankalp built the AEO Grader — an AI-era visibility framework deployed across Cybersecurity and Etihad to improve organic citations, impression share, and conversion." />
+<title>AEO Grader: Optimising for AI-Era Visibility – Sankalp Bandyopadhyay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --bg: #0a0a0a; --bg2: #111; --bg3: #1a1a1a; --border: #232323; --text: #f5f5f5; --text2: #a1a1a1; --text3: #717171; --accent: #FF6B35; --mono: 'JetBrains Mono', monospace; --sans: 'Inter', sans-serif; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--sans); font-size: 16px; line-height: 1.6; color: var(--text); background: var(--bg); }
+.scroll-progress-bar { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); width: 0%; z-index: 9999; transition: width 0.08s linear; }
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 3rem; background: rgba(10,10,10,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+.nav-brand { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--text); text-decoration: none; letter-spacing: 0.1em; }
+.nav-back { font-family: var(--mono); font-size: 11px; color: var(--text2); text-decoration: none; text-transform: uppercase; letter-spacing: 0.08em; transition: color 0.2s; }
+.nav-back:hover { color: var(--accent); }
+main { padding-top: 80px; max-width: 900px; margin: 0 auto; padding-left: 2rem; padding-right: 2rem; padding-bottom: 4rem; }
+.section-tag { font-family: var(--mono); font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; margin-bottom: 0.5rem; }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.2; }
+h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem; margin-top: 2.5rem; border-top: 1px solid var(--border); padding-top: 2rem; }
+h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text); }
+p { color: var(--text2); line-height: 1.75; margin-bottom: 0.9rem; font-size: 0.93rem; }
+p:last-child { margin-bottom: 0; }
+.hero-kicker { font-family: var(--mono); font-size: 0.82rem; color: var(--text3); margin-bottom: 1.5rem; letter-spacing: 0.04em; }
+.hero-metric { font-family: var(--mono); font-size: 2.8rem; font-weight: 700; color: var(--accent); margin: 1rem 0 0.25rem; line-height: 1; }
+.hero-sub { font-family: var(--mono); font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; }
+.metric-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 2rem 0; }
+.metric-item { background: var(--bg2); border: 1px solid var(--border); padding: 1.25rem 1rem; border-radius: 3px; text-align: center; }
+.metric-item .num { font-family: var(--mono); font-size: 1.35rem; font-weight: 700; color: var(--accent); line-height: 1.2; }
+.metric-item .label { font-family: var(--mono); font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px; line-height: 1.4; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: 3px; padding: 1.5rem; margin-bottom: 1rem; }
+.score-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.25rem 0; }
+.score-item { background: var(--bg3); border: 1px solid var(--border); padding: 1rem; border-radius: 3px; }
+.score-item .score-label { font-family: var(--mono); font-size: 10px; color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem; font-weight: 600; }
+.score-item p { font-size: 0.85rem; margin: 0; }
+.flow-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin: 1.25rem 0; }
+.flow-step { background: var(--bg3); border: 1px solid var(--border); padding: 0.4rem 0.9rem; border-radius: 2px; font-family: var(--mono); font-size: 11px; color: var(--text); font-weight: 600; }
+.flow-arrow { color: var(--accent); font-weight: 700; }
+.tag { display: inline-block; background: rgba(255,107,53,0.08); border: 1px solid rgba(255,107,53,0.2); color: var(--accent); font-family: var(--mono); font-size: 10px; padding: 0.2rem 0.65rem; border-radius: 2px; margin: 0.2rem 0.2rem 0 0; text-transform: uppercase; }
+.quote-card { background: var(--bg2); border-left: 3px solid var(--accent); padding: 1.75rem; margin: 2rem 0; border-radius: 0 3px 3px 0; }
+.quote-card blockquote { font-style: italic; color: var(--text); font-size: 0.95rem; line-height: 1.75; margin-bottom: 1.25rem; }
+.quote-author strong { display: block; color: var(--text); font-family: var(--sans); font-size: 0.88rem; font-weight: 600; }
+.quote-author span { font-family: var(--mono); font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
+.back-link { display: inline-block; margin-top: 2.5rem; padding: 0.65rem 1.25rem; border: 1px solid var(--border); color: var(--text2); text-decoration: none; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; border-radius: 2px; transition: all 0.2s; }
+.back-link:hover { border-color: var(--accent); color: var(--accent); }
+footer { border-top: 1px solid var(--border); padding: 2rem 3rem; text-align: center; font-family: var(--mono); font-size: 10px; color: var(--text3); }
+@media (max-width: 768px) { nav { padding: 0 1.25rem; } main { padding: 72px 1.25rem 3rem; } h1 { font-size: 1.5rem; } .hero-metric { font-size: 2.2rem; } .metric-row { grid-template-columns: 1fr 1fr; } .score-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="scroll-progress-bar" id="scrollProgress"></div>
+<nav>
+  <a class="nav-brand" href="index.html">SANKALP</a>
+  <a class="nav-back" href="index.html#cases">← Back to Portfolio</a>
+</nav>
+<main>
+  <div class="section-tag">AI-Era Visibility Framework · 2024–Present</div>
+  <h1>AEO Grader: Optimising for the AI Answer Engine</h1>
+  <div class="hero-kicker">Deployed Across: Zapcom Cybersecurity + Etihad Airways &nbsp;·&nbsp; Framework: Answer Engine Optimisation</div>
+  <div class="hero-metric">+18%</div>
+  <div class="hero-sub">Organic Visibility Improvement</div>
+
+  <div class="metric-row">
+    <div class="metric-item"><div class="num">+18%</div><div class="label">Organic Visibility</div></div>
+    <div class="metric-item"><div class="num">+23%</div><div class="label">AI Citation Rate</div></div>
+    <div class="metric-item"><div class="num">+0.3%</div><div class="label">CVR Improvement</div></div>
+    <div class="metric-item"><div class="num">2</div><div class="label">Verticals Deployed</div></div>
+  </div>
+
+  <h2>01 — Context & Origin</h2>
+  <p>AI-powered answer engines (ChatGPT, Perplexity, Google SGE, Claude) have fundamentally changed how B2B buyers and consumers research before purchase. They no longer click ten blue links — they ask a question and receive a synthesised answer. The brand cited in that answer wins the consideration, whether or not they appear in paid search.</p>
+  <p>AEO Grader is a proprietary framework developed to score and improve content and brand assets for visibility in AI-generated answers — not just traditional search rankings. Deployed first in the Cybersecurity vertical (Radware via Zapcom), then expanded to Etihad Airways.</p>
+
+  <h2>02 — The Challenge</h2>
+  <div class="card">
+    <h3>Search is No Longer Just Search</h3>
+    <p>Traditional SEO optimises for the top 10 blue links. AEO addresses a different question: when a CISO asks ChatGPT "what is the best DDoS protection for enterprise?" — does your brand appear in the answer? When a traveller asks Perplexity "which airline has the best direct routes from Abu Dhabi?" — does Etihad surface?</p>
+    <p>For both verticals, the answer was no. Existing content was optimised for keywords, not for AI answer synthesis. Structured data was absent or incomplete. Authority signals were weak across the sources AI models draw from.</p>
+  </div>
+
+  <h2>03 — The AEO Grader Framework</h2>
+  <p>The framework grades brand content across five dimensions critical to AI citation probability:</p>
+
+  <div class="score-grid">
+    <div class="score-item">
+      <div class="score-label">Citability</div>
+      <p>Is the content structured in a way that AI models can extract and cite as a direct answer?</p>
+    </div>
+    <div class="score-item">
+      <div class="score-label">Authority Signals</div>
+      <p>Are the right third-party sources — forums, review sites, publications — citing or referencing the brand?</p>
+    </div>
+    <div class="score-item">
+      <div class="score-label">Schema & Structure</div>
+      <p>Is structured data (FAQ, HowTo, Product schema) implemented to surface content in rich results and AI extractors?</p>
+    </div>
+    <div class="score-item">
+      <div class="score-label">Entity Clarity</div>
+      <p>Is the brand entity clearly defined across the web — Wikipedia, Wikidata, knowledge graphs — for AI model disambiguation?</p>
+    </div>
+    <div class="score-item">
+      <div class="score-label">Freshness & Breadth</div>
+      <p>Is content updated frequently enough, and does it cover the full semantic field of buyer questions?</p>
+    </div>
+    <div class="score-item">
+      <div class="score-label">Impression Share</div>
+      <p>Is the brand present across the distribution points where AI models pull training and retrieval signals?</p>
+    </div>
+  </div>
+
+  <div class="flow-row">
+    <div class="flow-step">Audit & Score</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">Content Restructure</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">Authority Building</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">Schema + Entity</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">Monitor Citations</div>
+  </div>
+
+  <h2>Deployment: Cybersecurity</h2>
+  <div class="card">
+    <p>For Radware (via Zapcom), AEO Grader was used to improve visibility in AI-generated answers for enterprise security queries. Content was restructured around specific CISO questions, schema was implemented across technical documentation, and authority signals were built through G2, Reddit, and security community forums where AI models draw heavily for enterprise software responses.</p>
+  </div>
+
+  <h2>Deployment: Etihad Airways</h2>
+  <div class="card">
+    <p>For Etihad, AEO was applied to route and destination content to improve citation rates in travel AI tools (Perplexity, ChatGPT travel queries). Structured data for routes, destinations, and loyalty programme was implemented. Loyalty programme content was restructured to surface Etihad Guest in AI answers around airline loyalty comparisons.</p>
+  </div>
+
+  <h2>04 — Key Metrics</h2>
+  <div class="metric-row">
+    <div class="metric-item"><div class="num">+18%</div><div class="label">Organic Visibility Improvement</div></div>
+    <div class="metric-item"><div class="num">+23%</div><div class="label">AI Citation Rate Increase</div></div>
+    <div class="metric-item"><div class="num">+0.3%</div><div class="label">Conversion Rate Improvement</div></div>
+    <div class="metric-item"><div class="num">2</div><div class="label">Verticals: Cyber + Travel</div></div>
+  </div>
+
+  <h2>What They Said</h2>
+  <div class="quote-card">
+    <blockquote>"I had the privilege of working alongside Sankalp Bandyopadhyay, and I can confidently say he is one of the most dynamic and forward-thinking marketing leaders I've come across. His ability to connect data-driven strategies with customer-centric storytelling is unmatched. What sets Sankalp apart is his strategic mindset combined with a bias for action. He not only sets the vision but ensures flawless execution, always keeping the customer journey at the center."</blockquote>
+    <div class="quote-author">
+      <strong>Sumita Kumari</strong>
+      <span>Director, Digital Transformation · Customer Success · Global Operations &amp; Delivery</span>
+    </div>
+  </div>
+
+  <div class="tag">AEO</div>
+  <div class="tag">GEO</div>
+  <div class="tag">SEO</div>
+  <div class="tag">AI Visibility</div>
+  <div class="tag">Schema</div>
+  <div class="tag">B2B + Travel</div>
+
+  <a href="index.html#cases" class="back-link">← Back to Case Studies</a>
+</main>
+<footer>© 2026 Sankalp Bandyopadhyay. Growth architecture, not campaigns.</footer>
+<script>
+  const bar = document.getElementById('scrollProgress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    bar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
+  }, { passive: true });
+</script>
+</body>
+</html>

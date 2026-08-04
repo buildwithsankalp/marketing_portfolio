@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="How Sankalp rebuilt Mashreq's bancassurance digital channel from near-zero to 30% of total lead volume — 67% CPL reduction, 5x spend scale." />
+<title>Mashreq Insurance: Bancassurance Digital – Sankalp Bandyopadhyay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --bg: #0a0a0a; --bg2: #111; --bg3: #1a1a1a; --border: #232323; --text: #f5f5f5; --text2: #a1a1a1; --text3: #717171; --accent: #FF6B35; --mono: 'JetBrains Mono', monospace; --sans: 'Inter', sans-serif; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--sans); font-size: 16px; line-height: 1.6; color: var(--text); background: var(--bg); }
+.scroll-progress-bar { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); width: 0%; z-index: 9999; transition: width 0.08s linear; }
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 3rem; background: rgba(10,10,10,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+.nav-brand { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--text); text-decoration: none; letter-spacing: 0.1em; }
+.nav-back { font-family: var(--mono); font-size: 11px; color: var(--text2); text-decoration: none; text-transform: uppercase; letter-spacing: 0.08em; transition: color 0.2s; }
+.nav-back:hover { color: var(--accent); }
+main { padding-top: 80px; max-width: 900px; margin: 0 auto; padding-left: 2rem; padding-right: 2rem; padding-bottom: 4rem; }
+.section-tag { font-family: var(--mono); font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; margin-bottom: 0.5rem; }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.2; }
+h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem; margin-top: 2.5rem; border-top: 1px solid var(--border); padding-top: 2rem; }
+h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text); }
+p { color: var(--text2); line-height: 1.75; margin-bottom: 0.9rem; font-size: 0.93rem; }
+p:last-child { margin-bottom: 0; }
+.hero-kicker { font-family: var(--mono); font-size: 0.82rem; color: var(--text3); margin-bottom: 1.5rem; letter-spacing: 0.04em; }
+.hero-metric { font-family: var(--mono); font-size: 2.8rem; font-weight: 700; color: var(--accent); margin: 1rem 0 0.25rem; line-height: 1; }
+.hero-sub { font-family: var(--mono); font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; }
+.metric-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 2rem 0; }
+.metric-item { background: var(--bg2); border: 1px solid var(--border); padding: 1.25rem 1rem; border-radius: 3px; text-align: center; }
+.metric-item .num { font-family: var(--mono); font-size: 1.35rem; font-weight: 700; color: var(--accent); line-height: 1.2; }
+.metric-item .label { font-family: var(--mono); font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px; line-height: 1.4; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: 3px; padding: 1.5rem; margin-bottom: 1rem; }
+.flow-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin: 1.25rem 0; }
+.flow-step { background: var(--bg3); border: 1px solid var(--border); padding: 0.4rem 0.9rem; border-radius: 2px; font-family: var(--mono); font-size: 11px; color: var(--text); font-weight: 600; }
+.flow-arrow { color: var(--accent); font-weight: 700; }
+.tag { display: inline-block; background: rgba(255,107,53,0.08); border: 1px solid rgba(255,107,53,0.2); color: var(--accent); font-family: var(--mono); font-size: 10px; padding: 0.2rem 0.65rem; border-radius: 2px; margin: 0.2rem 0.2rem 0 0; text-transform: uppercase; }
+.quote-card { background: var(--bg2); border-left: 3px solid var(--accent); padding: 1.75rem; margin: 2rem 0; border-radius: 0 3px 3px 0; }
+.quote-card blockquote { font-style: italic; color: var(--text); font-size: 0.95rem; line-height: 1.75; margin-bottom: 1.25rem; }
+.quote-author strong { display: block; color: var(--text); font-family: var(--sans); font-size: 0.88rem; font-weight: 600; }
+.quote-author span { font-family: var(--mono); font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
+.back-link { display: inline-block; margin-top: 2.5rem; padding: 0.65rem 1.25rem; border: 1px solid var(--border); color: var(--text2); text-decoration: none; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; border-radius: 2px; transition: all 0.2s; }
+.back-link:hover { border-color: var(--accent); color: var(--accent); }
+footer { border-top: 1px solid var(--border); padding: 2rem 3rem; text-align: center; font-family: var(--mono); font-size: 10px; color: var(--text3); }
+@media (max-width: 768px) { nav { padding: 0 1.25rem; } main { padding: 72px 1.25rem 3rem; } h1 { font-size: 1.5rem; } .hero-metric { font-size: 2.2rem; } .metric-row { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<div class="scroll-progress-bar" id="scrollProgress"></div>
+<nav>
+  <a class="nav-brand" href="index.html">SANKALP</a>
+  <a class="nav-back" href="index.html#cases">← Back to Portfolio</a>
+</nav>
+<main>
+  <div class="section-tag">Bancassurance · B2C · Mashreq Bank</div>
+  <h1>Mashreq Insurance: Rebuilding a Written-Off Channel</h1>
+  <div class="hero-kicker">Client: Mashreq Bank UAE &nbsp;·&nbsp; Product: Digital Insurance (Bancassurance)</div>
+  <div class="hero-metric">67%</div>
+  <div class="hero-sub">Cost Per Lead Reduction</div>
+
+  <div class="metric-row">
+    <div class="metric-item"><div class="num">67%</div><div class="label">CPL Reduction</div></div>
+    <div class="metric-item"><div class="num">77%</div><div class="label">Cost Per Interested Lead ↓</div></div>
+    <div class="metric-item"><div class="num">5x</div><div class="label">Spend Scaled</div></div>
+    <div class="metric-item"><div class="num">&lt;2%→30%</div><div class="label">Share of Total Lead Vol.</div></div>
+  </div>
+
+  <h2>01 — Client & Context</h2>
+  <p>Mashreq Bank's insurance portfolio (bancassurance) had a digital marketing channel that had largely been written off. Performance was poor, costs were high, and confidence in digital acquisition for insurance products was near zero. The business relied almost entirely on branch and call centre leads.</p>
+  <p>The task was to diagnose the channel, fix the fundamentals, and prove digital could become a meaningful lead source for the insurance business.</p>
+
+  <h2>02 — The Challenge</h2>
+  <div class="card">
+    <h3>A Channel With No Credibility</h3>
+    <p>Digital had been tried and dismissed. CPL was high, lead quality was poor, and agents weren't converting digital leads. The scepticism from product and sales teams was structural — any new approach would need to show results fast to survive internal politics.</p>
+  </div>
+  <div class="card">
+    <h3>Insurance Lead Quality vs. Volume</h3>
+    <p>Generic digital campaigns for insurance in the UAE generate high volumes of leads with very low intent. Cheap leads that never progress to policy sale are not just useless — they create operational cost in call centre handling and erode confidence in the channel further.</p>
+  </div>
+
+  <h2>03 — Strategy & Technology</h2>
+  <p>Instead of chasing cheap leads, the strategy focused on isolating "interested leads" — prospects who engaged meaningfully with insurance content before converting. The funnel was rebuilt around intent signals rather than form fills.</p>
+
+  <div class="flow-row">
+    <div class="flow-step">Intent Signal Filtering</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">Audience Precision</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">Creative & Messaging Rebuild</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">Channel Expansion</div>
+  </div>
+
+  <div class="card">
+    <h3>Audience Precision & Segmentation</h3>
+    <p>Rebuilt audience targeting around life-stage signals: expatriates with dependants, professionals with employer insurance gaps, homeowners with protection needs. Replaced generic demographic targeting with contextual and behavioural segments aligned to actual insurance purchase triggers.</p>
+  </div>
+  <div class="card">
+    <h3>Creative Strategy: Simplifying Actuarial Complexity</h3>
+    <p>Insurance messaging in MENA defaults to fear and compliance. Rebuilt creative to make insurance journeys simple and agile — translating complex actuarial data into single-insight ads that made agents nod and customers act. Tested benefit framing, protection storytelling, and digital journey clarity.</p>
+  </div>
+  <div class="card">
+    <h3>Digital Journey Optimisation</h3>
+    <p>Worked with the product team on user testing and market research to identify friction points in the digital insurance journey. Simplified the digital application flow, improving conversion from click to submitted application.</p>
+  </div>
+
+  <h2>04 — Key Metrics</h2>
+  <div class="metric-row">
+    <div class="metric-item"><div class="num">67%</div><div class="label">Cost Per Lead Reduction</div></div>
+    <div class="metric-item"><div class="num">77%</div><div class="label">Cost Per Interested Lead ↓</div></div>
+    <div class="metric-item"><div class="num">5x</div><div class="label">Budget Scaled</div></div>
+    <div class="metric-item"><div class="num">~30%</div><div class="label">Digital Share of Lead Volume</div></div>
+  </div>
+  <p>Performance marketing went from less than 2% of total insurance lead volume to approximately 30%. A channel that had been written off became a core acquisition engine for the business.</p>
+
+  <h2>What They Said</h2>
+  <div class="quote-card">
+    <blockquote>"Our Marketing Champion 'Sankalpa' has been a strong pillar for the Insurance Squad at Mashreq. A true team player in word and spirit, who always has this thinking cap on, to deliver world class digital marketing ideas. His untiring efforts on every marketing campaign — right from conceptualising creatives to collaborating with vendors and internal stakeholders — has been the catalyst for creating the required digital insurance buzz and making these insurance journeys simple and agile. He has been a key contributor to the market research and user testing for the digital journeys."</blockquote>
+    <div class="quote-author">
+      <strong>Amit Sood</strong>
+      <span>Digital Enthusiast · Innovation in Insurance &amp; Banking · 19 Years Cross-Functional Expertise · Mashreq Bank</span>
+    </div>
+  </div>
+
+  <div class="tag">Bancassurance</div>
+  <div class="tag">B2C</div>
+  <div class="tag">Performance</div>
+  <div class="tag">Lead Quality</div>
+
+  <a href="index.html#cases" class="back-link">← Back to Case Studies</a>
+</main>
+<footer>© 2026 Sankalp Bandyopadhyay. Growth architecture, not campaigns.</footer>
+<script>
+  const bar = document.getElementById('scrollProgress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    bar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
+  }, { passive: true });
+</script>
+</body>
+</html>

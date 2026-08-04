@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="How Sankalp managed $13.5M in direct booking revenue for Etihad Airways — PNR data loop, loyalty graph, 5.5–7.0x ROAS despite iOS14 signal loss." />
+<title>Etihad Airways: Signal Loss & Perishable Inventory – Sankalp Bandyopadhyay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --bg: #0a0a0a; --bg2: #111; --bg3: #1a1a1a; --border: #232323; --text: #f5f5f5; --text2: #a1a1a1; --text3: #717171; --accent: #FF6B35; --mono: 'JetBrains Mono', monospace; --sans: 'Inter', sans-serif; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--sans); font-size: 16px; line-height: 1.6; color: var(--text); background: var(--bg); }
+.scroll-progress-bar { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); width: 0%; z-index: 9999; transition: width 0.08s linear; }
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 3rem; background: rgba(10,10,10,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+.nav-brand { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--text); text-decoration: none; letter-spacing: 0.1em; }
+.nav-back { font-family: var(--mono); font-size: 11px; color: var(--text2); text-decoration: none; text-transform: uppercase; letter-spacing: 0.08em; transition: color 0.2s; }
+.nav-back:hover { color: var(--accent); }
+main { padding-top: 80px; max-width: 900px; margin: 0 auto; padding-left: 2rem; padding-right: 2rem; padding-bottom: 4rem; }
+.section-tag { font-family: var(--mono); font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; margin-bottom: 0.5rem; }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.2; }
+h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem; margin-top: 2.5rem; border-top: 1px solid var(--border); padding-top: 2rem; }
+h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text); }
+p { color: var(--text2); line-height: 1.75; margin-bottom: 0.9rem; font-size: 0.93rem; }
+p:last-child { margin-bottom: 0; }
+.hero-kicker { font-family: var(--mono); font-size: 0.82rem; color: var(--text3); margin-bottom: 1.5rem; letter-spacing: 0.04em; }
+.hero-metric { font-family: var(--mono); font-size: 2.8rem; font-weight: 700; color: var(--accent); margin: 1rem 0 0.25rem; line-height: 1; }
+.hero-sub { font-family: var(--mono); font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; }
+.metric-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 2rem 0; }
+.metric-item { background: var(--bg2); border: 1px solid var(--border); padding: 1.25rem 1rem; border-radius: 3px; text-align: center; }
+.metric-item .num { font-family: var(--mono); font-size: 1.35rem; font-weight: 700; color: var(--accent); line-height: 1.2; }
+.metric-item .label { font-family: var(--mono); font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px; line-height: 1.4; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: 3px; padding: 1.5rem; margin-bottom: 1rem; }
+.split-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 3px; padding: 1.5rem; margin-bottom: 1rem; display: grid; grid-template-columns: 80px 1fr; gap: 1.25rem; align-items: start; }
+.split-card .pct { font-family: var(--mono); font-size: 1.8rem; font-weight: 700; color: var(--accent); line-height: 1; }
+.split-card .pct-label { font-family: var(--mono); font-size: 9px; color: var(--text3); text-transform: uppercase; margin-top: 4px; }
+.flow-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin: 1.25rem 0; }
+.flow-step { background: var(--bg3); border: 1px solid var(--border); padding: 0.4rem 0.9rem; border-radius: 2px; font-family: var(--mono); font-size: 11px; color: var(--text); font-weight: 600; }
+.flow-arrow { color: var(--accent); font-weight: 700; }
+.tag { display: inline-block; background: rgba(255,107,53,0.08); border: 1px solid rgba(255,107,53,0.2); color: var(--accent); font-family: var(--mono); font-size: 10px; padding: 0.2rem 0.65rem; border-radius: 2px; margin: 0.2rem 0.2rem 0 0; text-transform: uppercase; }
+.quote-card { background: var(--bg2); border-left: 3px solid var(--accent); padding: 1.75rem; margin: 2rem 0; border-radius: 0 3px 3px 0; }
+.quote-card blockquote { font-style: italic; color: var(--text); font-size: 0.95rem; line-height: 1.75; margin-bottom: 1.25rem; }
+.quote-author strong { display: block; color: var(--text); font-family: var(--sans); font-size: 0.88rem; font-weight: 600; }
+.quote-author span { font-family: var(--mono); font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
+.back-link { display: inline-block; margin-top: 2.5rem; padding: 0.65rem 1.25rem; border: 1px solid var(--border); color: var(--text2); text-decoration: none; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; border-radius: 2px; transition: all 0.2s; }
+.back-link:hover { border-color: var(--accent); color: var(--accent); }
+footer { border-top: 1px solid var(--border); padding: 2rem 3rem; text-align: center; font-family: var(--mono); font-size: 10px; color: var(--text3); }
+@media (max-width: 768px) { nav { padding: 0 1.25rem; } main { padding: 72px 1.25rem 3rem; } h1 { font-size: 1.5rem; } .hero-metric { font-size: 2.2rem; } .metric-row { grid-template-columns: 1fr 1fr; } .split-card { grid-template-columns: 60px 1fr; } }
+</style>
+</head>
+<body>
+<div class="scroll-progress-bar" id="scrollProgress"></div>
+<nav>
+  <a class="nav-brand" href="index.html">SANKALP</a>
+  <a class="nav-back" href="index.html#cases">← Back to Portfolio</a>
+</nav>
+<main>
+  <div class="section-tag">Global Airline · Loyalty · 2025–Present</div>
+  <h1>Etihad Airways: Signal Loss & Perishable Inventory</h1>
+  <div class="hero-kicker">Client: Etihad Airways (via Zapcom) &nbsp;·&nbsp; Scope: Direct Booking Revenue + Loyalty Acquisition</div>
+  <div class="hero-metric">$13.5M+</div>
+  <div class="hero-sub">Direct Booking Revenue Supported</div>
+
+  <div class="metric-row">
+    <div class="metric-item"><div class="num">$13.5M+</div><div class="label">Direct Booking Revenue</div></div>
+    <div class="metric-item"><div class="num">5.5–7.0x</div><div class="label">ROAS Stabilised</div></div>
+    <div class="metric-item"><div class="num">159K+</div><div class="label">New Loyalty Members</div></div>
+    <div class="metric-item"><div class="num">$45–$65</div><div class="label">Booking CPA</div></div>
+  </div>
+
+  <h2>01 — Client & Context</h2>
+  <p>Etihad Airways is a global airline managing digital acquisition for direct bookings and Etihad Guest loyalty membership. The challenge is structural: airline inventory is perishable (empty seats expire), OTA commissions to Expedia and Skyscanner erode margin, and post-iOS14 signal loss broke the retargeting models that direct-booking campaigns had depended on.</p>
+  <p>Engaged as part of Zapcom's integrated marketing team for Etihad, managing the full performance marketing and loyalty acquisition portfolio.</p>
+
+  <h2>02 — The Challenge</h2>
+  <div class="card">
+    <h3>Signal Loss & Broken Retargeting</h3>
+    <p>iOS14 wiped approximately 40% of "Add to Cart" and fare search signals. Travellers who searched for flights could no longer be reliably retargeted. The standard dynamic ad model — re-engage people who looked at a route — was broken and expensive. Attribution models were producing unreliable ROAS numbers.</p>
+  </div>
+  <div class="card">
+    <h3>OTA Competition & Perishable Inventory</h3>
+    <p>Every booking through Expedia or Skyscanner costs Etihad a commission. Every empty seat on departure is revenue that disappears permanently. The two problems compound: signal loss makes efficient direct booking harder, pushing more volume to OTAs, while routes with empty seats need rapid, targeted advertising to fill them cost-effectively.</p>
+  </div>
+
+  <h2>03 — Strategy & Technology</h2>
+  <p>Two structural interventions: replace cookie-dependent retargeting with first-party PNR data, and restructure the budget allocation model to systematically build the loyalty data asset alongside performance.</p>
+
+  <div class="flow-row">
+    <div class="flow-step">20/35/45 Budget Split</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">Loyalty Graph (1P Data)</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">PNR Deduplication Loop</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">Predictive Inventory Ads</div>
+  </div>
+
+  <div class="card">
+    <h3>The 20/35/45 Budget Architecture</h3>
+    <p>Restructured budget allocation away from a pure performance model into a tiered funnel designed to systematically grow the first-party data asset:</p>
+    <div style="margin-top:1rem;">
+      <div class="split-card">
+        <div><div class="pct">20%</div><div class="pct-label">Brand</div></div>
+        <div><p style="margin:0;">Destination marketing. Awareness at the route and destination level to seed the consideration funnel before purchase intent crystallises.</p></div>
+      </div>
+      <div class="split-card">
+        <div><div class="pct">35%</div><div class="pct-label">Loyalty</div></div>
+        <div><p style="margin:0;">Etihad Guest membership acquisition. First-party data acquisition at $8–$14 CPL. Every loyalty member becomes a cookie-free retargeting asset.</p></div>
+      </div>
+      <div class="split-card">
+        <div><div class="pct">45%</div><div class="pct-label">Perf.</div></div>
+        <div><p style="margin:0;">High-intent direct booking. Performance budget routed to audiences seeded by the loyalty graph — bypassing cookies entirely.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>The PNR Data Loop</h3>
+    <p>Integrated Sabre and NDC booking data into the measurement stack. Used the Passenger Name Record (PNR) as the global deduplication key — allowing accurate attribution across the booking funnel without relying on browser cookies. Routing: GTM Server-Side to Meta CAPI. This created a closed measurement loop that produced reliable ROAS signals despite iOS14 signal loss.</p>
+  </div>
+  <div class="card">
+    <h3>Predictive Inventory Ads</h3>
+    <p>Evolution from standard dynamic ads to predictive inventory ads: bidding strategy adapted to bid higher on routes with seat availability pressure. Routes approaching departure with empty seats received elevated bid multipliers — turning perishable inventory into a bidding signal rather than a problem.</p>
+  </div>
+
+  <h2>04 — Key Metrics</h2>
+  <div class="metric-row">
+    <div class="metric-item"><div class="num">$13.5M+</div><div class="label">Direct Booking Revenue</div></div>
+    <div class="metric-item"><div class="num">5.5–7.0x</div><div class="label">Stabilised ROAS</div></div>
+    <div class="metric-item"><div class="num">159K+</div><div class="label">New Loyalty Members</div></div>
+    <div class="metric-item"><div class="num">$8–$14</div><div class="label">Loyalty Member CPL</div></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-item"><div class="num">$45–$65</div><div class="label">Booking CPA</div></div>
+    <div class="metric-item"><div class="num">↓</div><div class="label">OTA Dependency on Key Routes</div></div>
+    <div class="metric-item"><div class="num">PNR</div><div class="label">Deduplication Key via GTM SS</div></div>
+    <div class="metric-item"><div class="num">Sabre + NDC</div><div class="label">Data Integration</div></div>
+  </div>
+
+  <h2>What They Said</h2>
+  <div class="quote-card">
+    <blockquote>"It was an absolute pleasure working with Sankalp during his time as Head of Marketing. Throughout our time together, he consistently demonstrated a deep passion for the business, unwavering dedication to his team, and a genuine commitment to collaboration. Sankalp's professionalism, creativity, and enthusiasm for marketing shone through in every project he led. His contributions had a meaningful impact, and his positive energy was truly appreciated across the organisation."</blockquote>
+    <div class="quote-author">
+      <strong>Len Summa</strong>
+      <span>Transformational Revenue Leader · Growth Architect · Scaling Revenue from Strategy to Execution</span>
+    </div>
+  </div>
+
+  <div class="tag">Airlines</div>
+  <div class="tag">Loyalty</div>
+  <div class="tag">First-Party Data</div>
+  <div class="tag">PNR Loop</div>
+  <div class="tag">CAPI</div>
+  <div class="tag">GTM Server-Side</div>
+
+  <a href="index.html#cases" class="back-link">← Back to Case Studies</a>
+</main>
+<footer>© 2026 Sankalp Bandyopadhyay. Growth architecture, not campaigns.</footer>
+<script>
+  const bar = document.getElementById('scrollProgress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    bar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
+  }, { passive: true });
+</script>
+</body>
+</html>

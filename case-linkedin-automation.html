@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="How Sankalp built an AI-powered LinkedIn outreach system delivering 6.7x SDR throughput — n8n, Claude API, enrichment, and throttled sequencing." />
+<title>LinkedIn AI Automation: 6.7x SDR Throughput – Sankalp Bandyopadhyay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --bg: #0a0a0a; --bg2: #111; --bg3: #1a1a1a; --border: #232323; --text: #f5f5f5; --text2: #a1a1a1; --text3: #717171; --accent: #FF6B35; --mono: 'JetBrains Mono', monospace; --sans: 'Inter', sans-serif; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--sans); font-size: 16px; line-height: 1.6; color: var(--text); background: var(--bg); }
+.scroll-progress-bar { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); width: 0%; z-index: 9999; transition: width 0.08s linear; }
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 3rem; background: rgba(10,10,10,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+.nav-brand { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--text); text-decoration: none; letter-spacing: 0.1em; }
+.nav-back { font-family: var(--mono); font-size: 11px; color: var(--text2); text-decoration: none; text-transform: uppercase; letter-spacing: 0.08em; transition: color 0.2s; }
+.nav-back:hover { color: var(--accent); }
+main { padding-top: 80px; max-width: 900px; margin: 0 auto; padding-left: 2rem; padding-right: 2rem; padding-bottom: 4rem; }
+.section-tag { font-family: var(--mono); font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; margin-bottom: 0.5rem; }
+h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.2; }
+h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem; margin-top: 2.5rem; border-top: 1px solid var(--border); padding-top: 2rem; }
+h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text); }
+p { color: var(--text2); line-height: 1.75; margin-bottom: 0.9rem; font-size: 0.93rem; }
+p:last-child { margin-bottom: 0; }
+.hero-kicker { font-family: var(--mono); font-size: 0.82rem; color: var(--text3); margin-bottom: 1.5rem; letter-spacing: 0.04em; }
+.hero-metric { font-family: var(--mono); font-size: 2.8rem; font-weight: 700; color: var(--accent); margin: 1rem 0 0.25rem; line-height: 1; }
+.hero-sub { font-family: var(--mono); font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; }
+.metric-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 2rem 0; }
+.metric-item { background: var(--bg2); border: 1px solid var(--border); padding: 1.25rem 1rem; border-radius: 3px; text-align: center; }
+.metric-item .num { font-family: var(--mono); font-size: 1.35rem; font-weight: 700; color: var(--accent); line-height: 1.2; }
+.metric-item .label { font-family: var(--mono); font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px; line-height: 1.4; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: 3px; padding: 1.5rem; margin-bottom: 1rem; }
+.code-block { background: var(--bg3); border: 1px solid var(--border); border-radius: 3px; padding: 1.25rem; margin: 1rem 0; font-family: var(--mono); font-size: 11px; color: var(--text2); line-height: 1.8; }
+.code-block .step-num { color: var(--accent); font-weight: 700; margin-right: 0.5rem; }
+.flow-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin: 1.25rem 0; }
+.flow-step { background: var(--bg3); border: 1px solid var(--border); padding: 0.4rem 0.9rem; border-radius: 2px; font-family: var(--mono); font-size: 11px; color: var(--text); font-weight: 600; }
+.flow-arrow { color: var(--accent); font-weight: 700; }
+.tag { display: inline-block; background: rgba(255,107,53,0.08); border: 1px solid rgba(255,107,53,0.2); color: var(--accent); font-family: var(--mono); font-size: 10px; padding: 0.2rem 0.65rem; border-radius: 2px; margin: 0.2rem 0.2rem 0 0; text-transform: uppercase; }
+.quote-card { background: var(--bg2); border-left: 3px solid var(--accent); padding: 1.75rem; margin: 2rem 0; border-radius: 0 3px 3px 0; }
+.quote-card blockquote { font-style: italic; color: var(--text); font-size: 0.95rem; line-height: 1.75; margin-bottom: 1.25rem; }
+.quote-author strong { display: block; color: var(--text); font-family: var(--sans); font-size: 0.88rem; font-weight: 600; }
+.quote-author span { font-family: var(--mono); font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
+.back-link { display: inline-block; margin-top: 2.5rem; padding: 0.65rem 1.25rem; border: 1px solid var(--border); color: var(--text2); text-decoration: none; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; border-radius: 2px; transition: all 0.2s; }
+.back-link:hover { border-color: var(--accent); color: var(--accent); }
+footer { border-top: 1px solid var(--border); padding: 2rem 3rem; text-align: center; font-family: var(--mono); font-size: 10px; color: var(--text3); }
+@media (max-width: 768px) { nav { padding: 0 1.25rem; } main { padding: 72px 1.25rem 3rem; } h1 { font-size: 1.5rem; } .hero-metric { font-size: 2.2rem; } .metric-row { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<div class="scroll-progress-bar" id="scrollProgress"></div>
+<nav>
+  <a class="nav-brand" href="index.html">SANKALP</a>
+  <a class="nav-back" href="index.html#cases">← Back to Portfolio</a>
+</nav>
+<main>
+  <div class="section-tag">AI Automation · Outbound Systems · 2024</div>
+  <h1>LinkedIn AI Automation: 6.7x SDR Throughput</h1>
+  <div class="hero-kicker">System: n8n + Claude API + LinkedIn &nbsp;·&nbsp; Use Case: AI-Powered B2B Outreach at Scale</div>
+  <div class="hero-metric">6.7x</div>
+  <div class="hero-sub">Throughput vs Human SDR</div>
+
+  <div class="metric-row">
+    <div class="metric-item"><div class="num">6.7x</div><div class="label">SDR Throughput</div></div>
+    <div class="metric-item"><div class="num">AI</div><div class="label">Personalisation at Scale</div></div>
+    <div class="metric-item"><div class="num">Throttled</div><div class="label">Safe Send Rates</div></div>
+    <div class="metric-item"><div class="num">n8n</div><div class="label">Automation Stack</div></div>
+  </div>
+
+  <h2>01 — Context</h2>
+  <p>LinkedIn outreach is the dominant B2B prospecting channel. It is also the most manually intensive — researching prospects, writing personalised messages, managing follow-up sequences, and staying within LinkedIn's rate limits to avoid account restrictions.</p>
+  <p>This system was built to automate the entire outreach workflow end-to-end, from lead enrichment to personalised message delivery, while maintaining the quality of a hand-crafted outreach sequence. The architecture became the foundation for the Cybersecurity AI SDR and the Arkh Media outreach service model.</p>
+
+  <h2>02 — The Challenge</h2>
+  <div class="card">
+    <h3>Personalisation vs. Scale</h3>
+    <p>Generic outreach at scale is spam. Genuinely personalised outreach at scale is humanly impossible — a human SDR can research and write to 30–50 prospects per day with quality. The challenge was building a system that could process hundreds of prospects per day while producing outreach that felt individually crafted, not templated.</p>
+  </div>
+  <div class="card">
+    <h3>Platform Safety</h3>
+    <p>LinkedIn actively detects and restricts automated behaviour. Sending too many requests, moving too fast, or following patterns inconsistent with human behaviour triggers account restrictions. Any automation system must mimic human-like timing and respect daily volume limits.</p>
+  </div>
+
+  <h2>03 — Strategy & Technology</h2>
+
+  <div class="flow-row">
+    <div class="flow-step">Lead Import (CSV/D7)</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">Enrichment</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">AI Personalisation</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">Throttled Send</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">Follow-Up Sequence</div>
+  </div>
+
+  <div class="card">
+    <h3>The n8n Automation Workflow</h3>
+    <div class="code-block">
+      <div><span class="step-num">01.</span> IMPORT — Leads ingested from CSV export or D7 Lead Finder</div>
+      <div><span class="step-num">02.</span> ENRICH — Domain scraped for company context, job title, recent activity</div>
+      <div><span class="step-num">03.</span> SCORE — Claude API scores lead relevance against ICP criteria</div>
+      <div><span class="step-num">04.</span> DRAFT — Claude generates personalised connection request + follow-up sequence</div>
+      <div><span class="step-num">05.</span> THROTTLE — Requests batched with human-like timing delays (random 2–8 min gaps)</div>
+      <div><span class="step-num">06.</span> SEND — Unipile API executes LinkedIn actions within daily safe limits</div>
+      <div><span class="step-num">07.</span> SEQUENCE — Automated follow-up triggers on connection accept + no-reply logic</div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>AI Personalisation Layer</h3>
+    <p>Claude API generates outreach based on three inputs: the prospect's LinkedIn profile content, their company's recent activity or positioning, and the specific ICP angle being targeted. Output is a connection request note (under 300 characters) and a 3-step follow-up sequence, each message using different angles — not the same message on repeat.</p>
+  </div>
+  <div class="card">
+    <h3>Throttling & Safety Logic</h3>
+    <p>Daily connection request limits enforced at the workflow level. Randomised send timing to avoid detection patterns. Automatic pause triggers if acceptance rate drops below threshold — a signal that messaging is off or account is flagged. Designed to run indefinitely without manual intervention.</p>
+  </div>
+
+  <h2>04 — Key Metrics</h2>
+  <div class="metric-row">
+    <div class="metric-item"><div class="num">6.7x</div><div class="label">Throughput vs Human SDR</div></div>
+    <div class="metric-item"><div class="num">100%</div><div class="label">Personalised Messages</div></div>
+    <div class="metric-item"><div class="num">0</div><div class="label">Manual Steps Required</div></div>
+    <div class="metric-item"><div class="num">3-step</div><div class="label">Automated Follow-Up</div></div>
+  </div>
+
+  <h2>What They Said</h2>
+  <div class="quote-card">
+    <blockquote>"Sankalp has worked in my team for four years. His problem solving skills are top notch. He treats every client differently and innovates based on the situation. Sankalp has been an exceptional manager and has been able to get his team to perform at their full potential. He gives them space yet makes them deliver. Sankalp stands out as a person who takes risks and confronts problems instead of avoiding them. This quality makes him a strong manager and professional."</blockquote>
+    <div class="quote-author">
+      <strong>Sharang Arvind</strong>
+      <span>Director · Strategy · Sales CoE · PMO · Sodexo India</span>
+    </div>
+  </div>
+
+  <div class="tag">Automation</div>
+  <div class="tag">n8n</div>
+  <div class="tag">Claude API</div>
+  <div class="tag">LinkedIn</div>
+  <div class="tag">B2B Outreach</div>
+  <div class="tag">AI SDR</div>
+
+  <a href="index.html#cases" class="back-link">← Back to Case Studies</a>
+</main>
+<footer>© 2026 Sankalp Bandyopadhyay. Growth architecture, not campaigns.</footer>
+<script>
+  const bar = document.getElementById('scrollProgress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    bar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
+  }, { passive: true });
+</script>
+</body>
+</html>
